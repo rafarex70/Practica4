@@ -1,3 +1,4 @@
+import { setTimeout } from 'timers/promises';
 import {db} from "../models/index.js"
 import weatherservice from "../services/weatherservice.js"
 import toposervice from "../services/toposervice.js"
@@ -18,6 +19,9 @@ export const root = {
       try {
         console.log(city);
         await Promise.all([requestWeatherservice(city), requestToposervice(city)])
+
+        await simulateProcessWaiting();
+
         let respuesta = await db.eolicplants.create({
             city: city,
             planning: formatPlanning(planning.result)
@@ -45,8 +49,12 @@ export const root = {
     },
   };
 
-  function formatPlanning(planning) {
-    if (planning.toLowerCase().charCodeAt(0)>'m'.charCodeAt(0)) {
-        return planning.toUpperCase();
-    } else return planning.toLowerCase();
+function formatPlanning(planning) {
+  if (planning.toLowerCase().charCodeAt(0)>'m'.charCodeAt(0)) {
+      return planning.toUpperCase();
+  } else return planning.toLowerCase();
+}
+
+async function simulateProcessWaiting() {
+  await setTimeout(Math.random() * 2000 + 1000);
 }
