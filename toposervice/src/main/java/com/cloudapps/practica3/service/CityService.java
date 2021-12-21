@@ -1,5 +1,8 @@
 package com.cloudapps.practica3.service;
 
+import java.time.Duration;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,10 +29,11 @@ public class CityService {
 	}
 
 	public Mono<City> findById(String id) {
-		return cityRepository.findById(id.toLowerCase())
-				.switchIfEmpty(
-                Mono.error(new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "City with id "+id+" not found")));
+		return this.cityRepository.findByIdIgnoreCase(id)
+		                .delayElement(Duration.ofMillis(1000 + new Random().nextInt(2000)))
+		                .switchIfEmpty(
+		                        Mono.error(new ResponseStatusException(
+		                                HttpStatus.NOT_FOUND, "City with id " + id + " not found")));
 	}
 	
 	public Mono<City> deleteUser(String id) {

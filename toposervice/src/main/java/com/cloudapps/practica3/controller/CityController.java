@@ -24,13 +24,6 @@ public class CityController {
 
 	@GetMapping("/{id}")
     public Mono<City> getCity(@PathVariable String id) {
-		System.out.println("---------REQUEST---------");
-	    System.out.println(Thread.currentThread()); //Verificación hilo que se ejecuta
-	    try {
-	        Thread.sleep(1000+(new Random().nextLong(2000))); // simulate thread somehow got blocked
-	    } catch (InterruptedException e) {
-	    	return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
-	    }
         return cityService.findById(id);
     }
 
