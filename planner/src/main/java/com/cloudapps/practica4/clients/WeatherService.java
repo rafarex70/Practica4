@@ -1,9 +1,10 @@
 package com.cloudapps.practica4.clients;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -13,13 +14,14 @@ import weatherservice.WeatherServiceGrpc.WeatherServiceBlockingStub;
 
 @Component
 public class WeatherService {
+	public static final Logger log = LoggerFactory.getLogger(WeatherService.class);
 
 	@GrpcClient("weatherServer")
 	private WeatherServiceBlockingStub client;
 	
 
 	@Async
-	public Future<Weather> getWeather(String city) throws Exception {
+	public CompletableFuture<String> getWeather(String city) throws Exception {
 		
 		GetWeatherRequest request = GetWeatherRequest.newBuilder()
 	            .setCity("Madrid")
@@ -27,8 +29,8 @@ public class WeatherService {
 	        
 		Weather response = client.getWeather(request);
 
-	    System.out.println("Response received from server:\n" + response);
-	    return new AsyncResult<Weather>(response);
+		log.info("Response received from weatherserver: " + response.getWeather());
+	    return CompletableFuture.completedFuture(response.getWeather());
 		
 	}	
 }
