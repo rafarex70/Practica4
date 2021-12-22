@@ -12,7 +12,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import com.cloudapps.practica4.service.TopoService;
+import com.cloudapps.practica4.clients.TopoService;
 
 @Component
 public class PlanningChecker {
