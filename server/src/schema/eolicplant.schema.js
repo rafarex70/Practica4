@@ -14,6 +14,6 @@ type Mutation {
 type EolicPlant {
   id: ID!
   city: String!
-  planning: String!
+  planning: String
 }
 `);
