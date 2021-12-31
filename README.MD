@@ -1,11 +1,12 @@
-# Práctica 3 Comunicaciones (REST,gRPC y GraphQL)
+# Práctica 4 Comunicaciones (WebSocket, Kafka, REST, gRPC y GraphQL)
 
 ## Description
 
 Aplicación distribuida para la generación de plantas eólicas: EoloPlanner.
 Esta aplicación está compuesta por los siguientes servicios:
 - Client: Código JavaScript ejecutado en un navegador web.
-- Server: Servidor web que expone una API GraphQL que será usada por el cliente.
+- Server: Servidor web que expone una API GraphQL y comunicaciones WebSocket que será consumida por el cliente.
+- Planner: Servidor que comunica con las colas de Kafka generando mensajes de progreso según comunica con los siguientes servicios.
 - WeatherService: Devuelve información meteorológica.
 - TopoService: Devuelve información sobre la orografía del terreno.
 Estos servicios se comunican de la siguiente forma:
@@ -13,10 +14,11 @@ Estos servicios se comunican de la siguiente forma:
 ![secuencia](./images/secuencia.png)
 
 A continuación se detalla esta comunicación:
-- Client usa la API GraphQL para enviar una petición de creación de una Planta Eólica (Create EolicPlant).
-- Cuando el Server recibe la petición de creación de una nueva planta eólica del Client, solicita la información meteorológica y topográfica a los servicios WeatherService y TopoService respectivamente.
-- El servicio WeatherService ofrecer una interfaz gRPC.
-- El servicio TopoService ofrece una interfaz REST.
+- Client: Código JavaScript ejecutado en un navegador web.
+- Server: Servidor web que expone una API GraphQL y un endpoint WebSockets que será usado por el cliente. Las peticiones solicitadas se las redirige al Planner de forma asíncrona a través de colas de mensajes.
+- Planner: Módulo que realiza la planificación de la planta eólica, obteniendo la información del WeatherService y el TopoService y comunicando el progreso al Server.
+- WeatherService: Devuelve información meteorológica.
+- TopoService: Devuelve información sobre la orografía del terreno.
 
 ## System requirements
 
@@ -35,7 +37,8 @@ Descarga las dependencias y construye los 3 proyectos
 
     > node exec_aux_services.js
 
-El script descargará e iniciará las imagenes de MySQL y Mongo necesarias para persistir la información.
+El script descargará e iniciará las imagenes de MySQL, Mongo  necesarias para persistir la información y lensesio/fast-data-dev (Kafka) 
+para la gestion de las colas.
 
 ## Setup 
 
@@ -44,8 +47,9 @@ El script descargará e iniciará las imagenes de MySQL y Mongo necesarias para 
 Este script levanta las 3 aplicaciones:
 
 - weatherservice : http://localhost:9090 (gRPC)
-- toposervice : http://localhost:8080 (REST)
-- server : http://localhost:3000 (GraphQL)
+- toposervice : http://localhost:8089 (REST)
+- planner : http://localhost:8088 (Kafka)
+- server : http://localhost:3000 (GraphQL y WS)
 
 ## Predefined data
 
