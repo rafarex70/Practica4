@@ -11,6 +11,7 @@ function exec(serviceName, command) {
     return cmd;
 }
 const services = new Map();
+services.set('planner', exec('planner', 'sh mvnw spring-boot:run'));
 services.set('weatherservice', exec('weatherservice', 'node src/server.js'));
 services.set('toposervice', exec('toposervice', 'sh mvnw spring-boot:run'));
 services.set('server', exec('server', 'node src/server.js'));

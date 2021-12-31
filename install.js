@@ -10,4 +10,5 @@ function exec(serviceName, command) {
 }
 exec('weatherservice', 'npm install');
 exec('toposervice', 'sh mvnw install');
+exec('planner', 'sh mvnw install');
 exec('server', 'npm install');
