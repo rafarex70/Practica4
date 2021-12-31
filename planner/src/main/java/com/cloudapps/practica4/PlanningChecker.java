@@ -17,16 +17,12 @@ import com.cloudapps.practica4.clients.WeatherService;
 public class PlanningChecker {
 
 	public static final Logger log = LoggerFactory.getLogger(PlanningChecker.class);
+	@Autowired
 	private PlanningProcessor processor;
+	@Autowired
 	private TopoService topoService;
 	@Autowired
 	private WeatherService weatherservice;
-
-	@Autowired
-	public PlanningChecker(PlanningProcessor processor, TopoService topoService) {
-		this.processor = processor;
-		this.topoService = topoService;
-	}
 
 	@StreamListener(PlanningProcessor.INPUT_STREAM)
 	@Async
@@ -34,45 +30,34 @@ public class PlanningChecker {
 
 		log.info("INIT eolicPlant: " + eolicPlant);
 
+		Planning planning = new Planning();
+		planning.setPlanning(eolicPlant.getCity());
+		CompletableFuture<Void> landscapeCF = topoService.getLandscape(eolicPlant.getCity())
+				.thenAccept(landscape -> {
+					planning.proccessPlanning(landscape,eolicPlant);
+					notificar(eolicPlant);
+				});
+		CompletableFuture<Void> weatherCF = weatherservice.getWeather(eolicPlant.getCity())
+				.thenAccept(weather -> {
+					planning.proccessPlanning(weather,eolicPlant);
+					notificar(eolicPlant);
+				});
 		eolicPlant.setProgress(25);
+		notificar(eolicPlant);
+		CompletableFuture.allOf(landscapeCF,weatherCF).join();
 
-		String planning = eolicPlant.getCity();
-		CompletableFuture<String> landscape = getLanscape(eolicPlant);
-		CompletableFuture<String> weather =  getWeather(eolicPlant);
-		CompletableFuture.allOf(landscape,weather).join();
-		eolicPlant.setProgress(25);
-		notificar(eolicPlant);
-		planning+="-"+landscape.get();
-		eolicPlant.setProgress(50);
-		notificar(eolicPlant);
-		planning+="-"+weather.get();
-		eolicPlant.setProgress(75);
-		notificar(eolicPlant);
-		
 		eolicPlant.setCompleted(true);
 		eolicPlant.setProgress(100);
-		eolicPlant.setPlanning(planning);
+		eolicPlant.setPlanning(planning.getFormatPlanning());
 		notificar(eolicPlant);
 	}
 	
-	public void notificar(EolicPlant eolicPlant) throws Exception {
+	public void notificar(EolicPlant eolicPlant) {
 
 		processor.eoloplantCreationProgressNotifications().send(message(eolicPlant));
 		log.info("ENVIO eolicPlant: " + eolicPlant);
 	}
-	
-	@Async
-	public CompletableFuture<String> getLanscape(EolicPlant eolicPlant) throws Exception {
-		CompletableFuture<String> landscape = topoService.getLandscape(eolicPlant.getCity());
-		
-		return landscape;
-	}
-	
-	@Async
-	public CompletableFuture<String> getWeather(EolicPlant eolicPlant) throws Exception {
-		CompletableFuture<String> weather = weatherservice.getWeather(eolicPlant.getCity());
-		return weather;
-	}
+
 
 	private static final <T> Message<T> message(T val) {
 		return MessageBuilder.withPayload(val).build();

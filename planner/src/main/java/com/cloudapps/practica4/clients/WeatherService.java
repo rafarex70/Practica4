@@ -5,14 +5,14 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import weatherservice.GetWeatherRequest;
 import weatherservice.Weather;
 import weatherservice.WeatherServiceGrpc.WeatherServiceBlockingStub;
 
-@Component
+@Service
 public class WeatherService {
 	public static final Logger log = LoggerFactory.getLogger(WeatherService.class);
 
@@ -24,7 +24,7 @@ public class WeatherService {
 	public CompletableFuture<String> getWeather(String city) throws Exception {
 		
 		GetWeatherRequest request = GetWeatherRequest.newBuilder()
-	            .setCity("Madrid")
+	            .setCity(city)
 	            .build();
 	        
 		Weather response = client.getWeather(request);
