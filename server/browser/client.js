@@ -33,7 +33,8 @@ async function create() {
         contentType: 'application/json',
         success: function(response){
             console.log(response);
-            document.getElementById("progress").innerText = "Send 0%";
+            document.getElementById("progress").innerText = "Progress 0%";
+            document.getElementById("current_create").value = response.data.createEolicPlant.id;
         },
         error: function(d){
             console.log("Error: "+d.error);

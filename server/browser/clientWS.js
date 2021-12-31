@@ -6,14 +6,16 @@ socket.onopen = e => {
 
 socket.onmessage = event => {
     let response = JSON.parse(event.data);
-    console.log(`[message] Data received from server: ${response.progress}`);
-    document.getElementById("progress").innerText = `${response.progress}`;
-    if (response.progress==100){
-        alert("Insert eolic plant"
-                +"\n ID: "+response.id
-                +"\n city: "+response.city
-                +"\n planning: "+response.planning+"");
-        location.reload();
+    console.log(`[message] Progress received from server: ${response.progress}`);
+    if (response.id==document.getElementById("current_create").value){
+        document.getElementById("progress").innerText = `Progress ${response.progress}%`;
+        if (response.completed){
+            alert("Insert eolic plant"
+                    +"\n ID: "+response.id
+                    +"\n city: "+response.city
+                    +"\n planning: "+response.planning+"");
+            location.reload();
+        }
     }
 };
 
