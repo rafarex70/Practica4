@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -20,6 +21,7 @@ public class TopoService {
 		this.webClient = webClientBuilder.baseUrl("http://localhost:8089/api/topographicdetails/").build();
 	}
 
+	@Async
 	public CompletableFuture<String> getLandscape(String city) {
 		return this.webClient.get().uri("/{city}", city)
 				.accept(MediaType.APPLICATION_JSON)
