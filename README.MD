@@ -26,19 +26,19 @@ A continuación se detalla esta comunicación:
 - Node 16
 - Docker 19
 
+## Start Docker images
+
+    > node exec_aux_services.js
+
+El script descargará e iniciará las imagenes de MySQL, Mongo  necesarias para persistir la información y lensesio/fast-data-dev (Kafka) 
+para la gestion de las colas.
+
 ## Build
 
     > npm install
     > node install.js
 
 Descarga las dependencias y construye los 3 proyectos
-
-## Start Docker DB images
-
-    > node exec_aux_services.js
-
-El script descargará e iniciará las imagenes de MySQL, Mongo  necesarias para persistir la información y lensesio/fast-data-dev (Kafka) 
-para la gestion de las colas.
 
 ## Setup 
 

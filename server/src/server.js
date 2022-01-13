@@ -26,7 +26,7 @@ db.sequelize.sync();
 
 app.ws('/progressWS', (ws, req) => {
 
-  console.log('User connected');
+  console.log('User connected '+req.headers['sec-websocket-key']);
 
   ws.on('message', (city) => {
       console.log('Starting planning of :' + city);
