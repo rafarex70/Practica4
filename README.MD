@@ -53,7 +53,7 @@ Este script levanta las 3 aplicaciones:
 
 ## Predefined data
 
-Para poder probar en el arranque de toposervice se dá de alta las sigueintes ciudades con estas características:
+Para poder probar en el arranque de toposervice se dá de alta las siguientes ciudades con estas características:
 
     new City("madrid", "flat"),
     new City("barcelona", "flat"),
